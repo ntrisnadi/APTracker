@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -28,11 +29,13 @@ public class BuildingEditor extends JFrame{
 	
 	private ArrayList<Building> buildingArray;
 	private ArrayList<Map> mapArray;
+	private ArrayList<Marker> markerArray;
 	private JScrollPane buildingList = new JScrollPane();
 	private JScrollPane mapList = new JScrollPane();
 	
 	private JButton addBuilding = new JButton("Add Building");
 	private JButton addMap = new JButton("Add Map");
+	private JButton importMaps = new JButton("Import Maps");
 	private JButton delete = new JButton("DeleteSelected");
 	private JButton reset = new JButton("Reset");
 	private JButton sortBuilding = new JButton("Sort Building(s)");
@@ -47,11 +50,15 @@ public class BuildingEditor extends JFrame{
 	};
 
 	public BuildingEditor () {
+		// Get the global object arrays
 		buildingArray = Loader.buildingArray;
 		mapArray = Loader.mapArray;
+		markerArray = Loader.markerArray;
 		
+		// Build interface
 		addBuilding.addActionListener(toolClicks);
 		addMap.addActionListener(toolClicks);
+		importMaps.addActionListener(toolClicks);
 		delete.addActionListener(toolClicks);
 		reset.addActionListener(toolClicks);
 		sortBuilding.addActionListener(toolClicks);
@@ -66,6 +73,7 @@ public class BuildingEditor extends JFrame{
 		Box butts = Box.createHorizontalBox();
 		butts.add(addBuilding);
 		butts.add(addMap);
+		butts.add(importMaps);
 		butts.add(delete);
 		butts.add(reset);
 		butts.add(sortBuilding);
@@ -80,6 +88,9 @@ public class BuildingEditor extends JFrame{
 		reset();
 	}
 	public void refresh() {
+		// Remember original scroll position
+		int buildingValue = buildingList.getVerticalScrollBar().getValue();
+		int mapValue = mapList.getVerticalScrollBar().getValue();
 		// Draw all buildings
 		Box outBuilding = Box.createVerticalBox();
 		for (int i = 0; i < buildingArray.size(); i++) {
@@ -100,13 +111,17 @@ public class BuildingEditor extends JFrame{
 			}
 		}
 		buildingList.setViewportView(outBuilding);
+		buildingList.getVerticalScrollBar().setValue(buildingValue);
 		mapList.setViewportView(outMap);
+		mapList.getVerticalScrollBar().setValue(mapValue);
 	}
 	public void toolClick(String command) {
 		if (command.equals(addBuilding.getText()))
 			addBuilding();
 		else if (command.equals(addMap.getText()))
 			addMap();
+		else if (command.equals(importMaps.getText()))
+			importMaps();
 		else if (command.equals(delete.getText()))
 			delete();
 		else if (command.equals(reset.getText()))
@@ -130,14 +145,42 @@ public class BuildingEditor extends JFrame{
 		mapArray.add(out);
 		refresh();
 	}
+	public void importMaps() {
+
+		final JFileChooser fc = new JFileChooser();
+		fc.setMultiSelectionEnabled(true);
+		int returnValue = fc.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION)
+		{
+			Object[] choices = {"File Only", "Name from File", "Name and Floor from File"};
+			Object selectedValue = JOptionPane.showInputDialog(this,"Specify import behavior","Import",
+					JOptionPane.QUESTION_MESSAGE,null,choices,choices[1]);
+			System.out.println(selectedValue);
+			
+			File[] files = fc.getSelectedFiles();
+			for (int i = 0; i < files.length; i++) {
+				Map out = new Map();
+				out.setBuilding(buildingArray.get(0));
+				out.setPath(files[i].getPath());
+				if(selectedValue == choices[1] || selectedValue == choices[2])
+					out.setName(files[i].getName().substring(0, files[i].getName().length()-4));
+				if(selectedValue == choices[2])
+					System.out.println("Feature Not Implemented Yet");	// TODO Find Floor ID
+				mapArray.add(out);
+				refresh();
+			}
+		}
+	}
 	public void delete() {
+		// TODO List the map deletion hierarchy
+		for (int i = mapArray.size()-1; i >= 0; i--) {
+			if (mapArray.get(i).getBuilding().isSelected() || mapArray.get(i).isSelected()) {
+				mapArray.remove(i);
+			}
+		}
 		for (int i = buildingArray.size()-1; i >= 0; i--) 
 			if (buildingArray.get(i).isSelected())
 				buildingArray.remove(i);
-		for (int i = mapArray.size()-1; i >= 0; i--) 
-			if (mapArray.get(i).isVisible() && mapArray.get(i).isSelected() ||
-					!buildingArray.contains(mapArray.get(i).getBuilding()))
-				mapArray.remove(i);
 		refresh();
 	}
 	public void reset() {
@@ -185,8 +228,10 @@ public class BuildingEditor extends JFrame{
 		}
 		
 		for (int j = 0; j < mapArray.size(); j++) {
-			if (mapArray.get(j).isVisible() && mapArray.get(j).isSelected())
+			if (mapArray.get(j).isVisible() && mapArray.get(j).isSelected()) {
 				mapArray.get(j).setBuilding(buildingArray.get(index));
+				mapArray.get(j).setSelected(false);
+			}
 		}
 		
 		refresh();

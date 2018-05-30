@@ -20,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
+import javafx.scene.input.KeyCode;
+
 public class MarkerEditor extends JFrame {
 	
 	private static Interface target;
@@ -31,9 +33,9 @@ public class MarkerEditor extends JFrame {
 	
 	public boolean addingNew = false;
 	private JComboBox options = new JComboBox();
-	private JTextArea name = new JTextArea();
+	private JTextArea name = new JTextArea("AP01");
 	private JTextArea side = new JTextArea();
-	private JTextArea room = new JTextArea();
+	private JTextArea room = new JTextArea("#");
 	private JComboBox floors = new JComboBox();
 	private JTextArea descript = new JTextArea();
 	private JTextArea preview = new JTextArea();
@@ -48,7 +50,9 @@ public class MarkerEditor extends JFrame {
 	private KeyListener typing = new KeyListener() {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			refresh();						
+			refresh();
+			if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				execute(new ActionEvent(accept, getDefaultCloseOperation(), "Accept"));
 		}
 
 		@Override

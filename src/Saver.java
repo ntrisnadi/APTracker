@@ -71,7 +71,7 @@ public class Saver {
 		}
 	}
 	
-	public String applyTag(Pattern regex, String src) {
+	public static String applyTag(Pattern regex, String src) {
 		return regex.toString().replace(Tags.REPLACE.toString(),src);
 	}
 	public void compileProj(BufferedWriter bw) {
@@ -90,7 +90,7 @@ public class Saver {
 			e.printStackTrace();
 		}
 	}
-	public void compileBuilding(BufferedWriter bw, Building src) {
+	public static void compileBuilding(BufferedWriter bw, Building src) {
 		try {
 			bw.write(Loader.getOpenTag(Tags.BUILDING));					bw.newLine();
 			bw.write("\t" + applyTag(Tags.NAME, src.getName()));		bw.newLine();
