@@ -152,12 +152,10 @@ public class BuildingEditor extends JFrame{
 		int returnValue = fc.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION)
 		{
+			File[] files = fc.getSelectedFiles();
 			Object[] choices = {"File Only", "Name from File", "Name and Floor from File"};
 			Object selectedValue = JOptionPane.showInputDialog(this,"Specify import behavior","Import",
 					JOptionPane.QUESTION_MESSAGE,null,choices,choices[1]);
-			System.out.println(selectedValue);
-			
-			File[] files = fc.getSelectedFiles();
 			for (int i = 0; i < files.length; i++) {
 				Map out = new Map();
 				out.setBuilding(buildingArray.get(0));

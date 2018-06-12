@@ -14,10 +14,12 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class Exporter {
+public class Exporter extends JPanel {
 	
 	private JFrame window = new JFrame("Export Whitelist");
 	private Dimension listSize = new Dimension(800,500);
@@ -149,6 +151,14 @@ public class Exporter {
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(src));
 				
+				Object[] choices = {"Labels Only", "Table(Tabs)", "Table(Commas)"};
+				Object selectedValue = JOptionPane.showInputDialog(this,"Specify export behavior","Export",
+						JOptionPane.QUESTION_MESSAGE,null,choices,choices[1]);
+				
+				if (selectedValue == choices[1] || selectedValue == choices[2]) {
+					bw.write("Type\tName\tRoom\tBuilding\tSchool\tState\tDescription\tLabel");
+					bw.newLine();
+				}
 				for (int i = 0; i < buildingArray.size(); i++) {
 					for (int j = 0; j < mapArray.size(); j++) {
 						if (mapArray.get(j).isSelected() && mapArray.get(j).getBuilding().equals(buildingArray.get(i))) {
@@ -157,7 +167,25 @@ public class Exporter {
 									for (int L = 0; L < markerTypes.size(); L++) {
 										if (markerArray.get(k).getType().equals(markerTypes.get(L).getType()) &&
 												markerTypes.get(L).isSelected()) {
-											bw.write(markerArray.get(k).getLabel());
+
+											if (selectedValue == choices[0])
+												bw.write(markerArray.get(k).getLabel());
+											else {
+												String delim;
+												if(selectedValue == choices[1])
+													delim = "\t";
+												else
+													delim = ",";
+												bw.write(markerArray.get(k).getType() + delim +
+														markerArray.get(k).getName() + delim +
+														markerArray.get(k).getRoom() + delim +
+														markerArray.get(k).getMap().getBuilding().getName() + delim + 
+														Loader.clientAlias + delim + 
+														Loader.stateName + delim +
+														markerArray.get(k).getDescription() + delim +
+														markerArray.get(k).getLabel());
+											}
+												
 											bw.newLine();
 											System.out.println(markerArray.get(k).getLabel());
 											break;

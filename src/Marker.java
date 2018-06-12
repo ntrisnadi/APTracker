@@ -21,7 +21,6 @@ public class Marker {
 	protected String label = "";
 	protected String name = "";
 	protected String room = "";
-	protected String side = "";
 	protected String description = "";
 	
 	protected String path;
@@ -51,7 +50,6 @@ public class Marker {
 		this.name = new String(copy.name);
 		this.type = new String(copy.type);
 		this.room = new String(copy.room);
-		this.side = new String(copy.side);
 		this.coord = new Point(copy.coord);
 		this.entry = new Entry();
 		this.entry.setTarget(this);
@@ -66,7 +64,6 @@ public class Marker {
 	public String getLabel() {return label;}
 	public String getName() {return name;}
 	public String getRoom() {return room;}
-	public String getSide() {return side;}
 	public String getDescription() {return description;}
 	public BufferedImage getImage() {return image;}
 	public String getPath() {return path;}
@@ -86,7 +83,6 @@ public class Marker {
 	public void setName(String inName) {name = inName;}
 	public void setPath(String inPath) {path = inPath;}
 	public void setRoom(String inRoom) {room = inRoom;}
-	public void setSide(String inSide) {side = inSide;}
 	public void setMap(Map inMap) {map = inMap; }
 	public void setVisible(boolean inVisible) {visible = inVisible;}
 	public void setSelected(boolean inSelect) {selected = inSelect;}
@@ -111,7 +107,7 @@ public class Marker {
 		return true;
 	}	
 	public String relabel() {
-		String out = name + "." + side + room + "."
+		String out = name + "." + room + "."
 				+ (String) map.getFloor() + "." + map.getBuilding().getAlias()
 				+ "." + Loader.clientAlias + "." + Loader.stateName;
 		label = out;

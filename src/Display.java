@@ -26,9 +26,9 @@ public class Display extends JPanel implements MouseListener{
 	
 	private int x = 0;
 	private int y = 0;
-	public double z = .5;
+	private double z = .5;
 	
-	private static int imageWidth;
+	private int imageWidth;
 	private int imageHeight;
 	private double minZ = 0.3;
 	private double maxZ = 1.5;
@@ -46,9 +46,9 @@ public class Display extends JPanel implements MouseListener{
 		displayMap = active;
 		displayMap.reload();
 		this.setBackground(Color.LIGHT_GRAY);
-		windowSize.setSize(displayMap.getImage().getWidth(), displayMap.getImage().getHeight());
-		imageWidth = (int) (windowSize.getWidth()*z);
-		imageHeight = (int) (windowSize.getHeight()*z);
+		windowSize.setSize(target.getSize().getWidth()*resolution, target.getSize().getHeight());
+		imageWidth = (int) (displayMap.getImage().getWidth()*z);
+		imageHeight = (int) (displayMap.getImage().getHeight()*z);
 		addMouseListener(this);
 	}
 	public static Display createDisplay(Interface target, Map active, double resolution) {
@@ -72,6 +72,7 @@ public class Display extends JPanel implements MouseListener{
 	public Dimension getImageSize() {return new Dimension(imageWidth, imageHeight);}
 	public Point getLocation() {return new Point(x, y);}
 	public Map getDisplayMap() {return displayMap;}
+	public Controller getController() {return control;}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -89,6 +90,7 @@ public class Display extends JPanel implements MouseListener{
 	public void refresh() {
 		this.paintComponent(this.getGraphics());
 		this.revalidate();
+		showLocation();
 	}
 	public void centerCursor() {
 		x = c_x - imageWidth / 2;

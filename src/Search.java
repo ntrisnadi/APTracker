@@ -94,7 +94,6 @@ public class Search extends JFrame {
 		return src.getType().toUpperCase().contains(in) ||
 				src.getName().toUpperCase().contains(in) ||
 				src.getRoom().toUpperCase().contains(in) ||
-				src.getSide().toUpperCase().contains(in) ||
 				src.getMap().getName().toUpperCase().contains(in) ||
 				src.getMap().getFloor().toUpperCase().contains(in) ||
 				src.getDescription().toUpperCase().contains(in);

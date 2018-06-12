@@ -12,12 +12,12 @@ public class Controller extends JPanel{
 	private Display targetDisplay;
 	final private static int STEP = 100;
 	
-	private int ddx = 2;			// Acceleration
-	private int ddy = 2;
-	private int d_dx = 4;			// Deceleration
-	private int d_dy = 4;
-	private int max_dx = 20;
-	private int max_dy = 20;
+	private int ddx = 3;			// Acceleration
+	private int ddy = 3;
+	private int d_dx = 6;			// Deceleration
+	private int d_dy = 6;
+	private int max_dx = 50;
+	private int max_dy = 50;
 	
 	private int dx = 0;
 	private int dy = 0;
@@ -145,7 +145,7 @@ public class Controller extends JPanel{
 		targetDisplay.scale(dz);
 	}
 	public void setVelocity(DIR direction) {
-		int initTrans = 10;
+		int initTrans = 30;
 		double initZoom = .03;
 		switch (direction) {
 		case UP :

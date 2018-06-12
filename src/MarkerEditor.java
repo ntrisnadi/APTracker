@@ -34,7 +34,6 @@ public class MarkerEditor extends JFrame {
 	public boolean addingNew = false;
 	private JComboBox options = new JComboBox();
 	private JTextArea name = new JTextArea("AP01");
-	private JTextArea side = new JTextArea();
 	private JTextArea room = new JTextArea("#");
 	private JComboBox floors = new JComboBox();
 	private JTextArea descript = new JTextArea();
@@ -66,7 +65,6 @@ public class MarkerEditor extends JFrame {
 	};
 	public JComboBox getOptionsField() { return options;}
 	public JTextArea getNameField() { return name;}
-	public JTextArea getSideField() { return side; }
 	public JTextArea getRoomField() { return room; }
 	public JComboBox getFloorsField() { return floors; }
 	public JTextArea getDescriptField() {return descript;}
@@ -91,8 +89,6 @@ public class MarkerEditor extends JFrame {
 		setTraversalKey(options);
 		name.setBorder(BorderFactory.createTitledBorder("Name"));
 		setTraversalKey(name);
-		side.setBorder(BorderFactory.createTitledBorder("Side ID"));
-		setTraversalKey(side);
 		room.setBorder(BorderFactory.createTitledBorder("Room ID"));
 		setTraversalKey(room);
 		floors.setBorder(BorderFactory.createTitledBorder("Floor"));
@@ -113,7 +109,6 @@ public class MarkerEditor extends JFrame {
 		
 		fields.add(options);
 		fields.add(name);
-		fields.add(side);
 		fields.add(room);
 		fields.add(floors);
 		fields.add(descript);
@@ -136,7 +131,6 @@ public class MarkerEditor extends JFrame {
 		out.addingNew = false;
 		out.getOptionsField().setSelectedItem(src.getType());
 		out.getNameField().setText(src.getName());
-		out.getSideField().setText(src.getSide());
 		out.getRoomField().setText(src.getRoom());
 		out.getFloorsField().setSelectedItem(src.getMap().getFloor());
 		out.getDescriptField().setText(src.getDescription());
@@ -156,7 +150,6 @@ public class MarkerEditor extends JFrame {
 			out.setInterface(target);
 			
 			out.setName(name.getText());
-			out.setSide(side.getText());
 			out.setRoom(room.getText());
 			out.setDescription(descript.getText());
 			Point coord = target.getActiveDisplay().unscaleCursor();
@@ -179,13 +172,13 @@ public class MarkerEditor extends JFrame {
 			this.dispose();
 	}
 	public String compile() {
-		String out = name.getText() + "." + side.getText() + room.getText() + "."
+		String out = name.getText() + "." + room.getText() + "."
 					+ (String) floors.getSelectedItem() + "." + Interface.activeMap.getBuilding().getAlias()
 					+ "." + Loader.clientAlias + "." + Loader.stateName;
 		return out;
 	}
 	public static String compile(Marker src) {
-		String out = src.getName() + "." + src.getSide() + src.getRoom() + "."
+		String out = src.getName() + "." + src.getRoom() + "."
 					+ src.getMap().getFloor() + "." + src.getMap().getBuilding().getAlias()
 					+ "." + Loader.clientAlias + "." + Loader.stateName;
 		return out;

@@ -53,11 +53,13 @@ public class Interface extends JFrame implements KeyListener{
 		
 		for (int i = 0; i < mapArray.size();i++) {
 			Display out = Display.createDisplay(this, mapArray.get(i), resolution);
-			
-			if (i == 0)
-				control = new Controller(out);
-			out.setController(control);
+
+			out.setController(new Controller(out));
+			out.getController().setTargetDisplay(out);
+			out.getController().setFocusable(false);
 			out.setMarkerList(list);
+			if (i == 0)
+				control = out.getController();
 			
 			window.addTab(mapArray.get(i).getName(),out);
 		}
@@ -70,13 +72,12 @@ public class Interface extends JFrame implements KeyListener{
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				activeMap = getActiveDisplay().getDisplayMap();
-				control.setTargetDisplay(getActiveDisplay());
+				control = getActiveDisplay().getController();
 				getActiveDisplay().refresh();
 			}
 			
 		});
 		window.setPreferredSize(new Dimension((int) (SIZE.getWidth()*resolution), (int)SIZE.getHeight()));
-		control.setFocusable(false);
 		window.setFocusable(false);
 		
 		Box toolbox = Box.createVerticalBox();
@@ -128,6 +129,7 @@ public class Interface extends JFrame implements KeyListener{
 	public Display getActiveDisplay() { return (Display) window.getSelectedComponent();}
 	public ArrayList<Marker> getMarkerList() { return markerArray;}
 	public ArrayList<Map> getMapList() { return mapArray;}
+	public Dimension getSize() {return SIZE;}
 	
 	public void refresh() {
 		((Display)window.getSelectedComponent()).refresh();
@@ -233,8 +235,8 @@ public class Interface extends JFrame implements KeyListener{
 		case(KeyEvent.VK_RIGHT) :
 			control.translateCursor(Controller.DIR.RIGHT);
 		}
-		getActiveDisplay().refresh();
 		list.refresh();
+		getActiveDisplay().refresh();
 	}
 
 	@Override
